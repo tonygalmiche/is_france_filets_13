@@ -41,7 +41,7 @@ class MassMailingContact(models.Model):
                 list_id = lists[0].id
                 ids=[]
                 for line in obj.subscription_list_ids:
-                    ids.append(line.list_id)
+                    ids.append(line.list_id.id)
                 if list_id not in ids:
                     vals={
                         'list_id'   : list_id,
