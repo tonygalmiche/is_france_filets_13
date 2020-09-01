@@ -4,6 +4,27 @@ from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
 
 
+class IsMailingListAssistant(models.Model):
+    _name = 'is.mailing.list.assistant'
+    _description = "Assistant de création de mailing list"
+    _order = 'name'
+
+    name    = fields.Char("Nom", required=True, index=True)
+    list_id = fields.Many2one('mailing.list', "Liste de diffusion")
+    mails   = fields.Text("Mails",help="Liste des mails (un mail par ligne) à traiter par cet assistant")
+
+
+    def desactiver_contacts(self):
+        for obj in self:
+            mails = obj.mails.split("\n")
+            for mail in mails:
+                contacts = self.env['mailing.contact'].search([('email','=',mail)])
+                print('mail=',mail,contacts)
+                for contact in contacts:
+                    print(contact,contact.email)
+                    contact.active=False
+
+
 class IsSegment(models.Model):
     _name = 'is.segment'
     _description = "Segment"
@@ -32,6 +53,7 @@ class MassMailingContact(models.Model):
     is_fax           = fields.Char(string='Numéro de fax')
     is_site_internet = fields.Char(string='Site internet')
     is_segment_id    = fields.Many2one('is.segment', "Segment")
+    active           = fields.Boolean(string='Actif',default=True)
 
 
     def add_last_mailing_list_action(self):
