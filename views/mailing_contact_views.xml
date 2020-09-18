@@ -9,6 +9,7 @@
                 <form>
                     <header style="min-height:31px;">
                         <button name="desactiver_contacts" type="object" string="Désactiver les contacts"/>
+                        <button name="ajouter_contacts"    type="object" string="Ajouter les contacts à la liste"/>
                     </header>
                     <sheet>
                         <group>

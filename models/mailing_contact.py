@@ -19,10 +19,29 @@ class IsMailingListAssistant(models.Model):
             mails = obj.mails.split("\n")
             for mail in mails:
                 contacts = self.env['mailing.contact'].search([('email','=',mail)])
-                print('mail=',mail,contacts)
                 for contact in contacts:
-                    print(contact,contact.email)
                     contact.active=False
+
+
+    def ajouter_contacts(self):
+        for obj in self:
+            list_id = obj.list_id.id
+            if list_id:
+                mails = obj.mails.split('\n')
+                for line in mails:
+                    mail = line.strip()
+                    if mail!='':
+                        contacts = self.env['mailing.contact'].search([('email','=',mail)])
+                        for contact in contacts:
+                            ids=[]
+                            for line in contact.subscription_list_ids:
+                                ids.append(line.list_id.id)
+                            if list_id not in ids:
+                                vals={
+                                    'list_id'   : list_id,
+                                    'contact_id': contact.id,
+                                }
+                                res = self.env['mailing.contact.subscription'].create(vals)
 
 
 class IsSegment(models.Model):
@@ -70,5 +89,5 @@ class MassMailingContact(models.Model):
                         'contact_id': obj.id,
                     }
                     res = self.env['mailing.contact.subscription'].create(vals)
-                    print(obj, list_id,res)
+
 
