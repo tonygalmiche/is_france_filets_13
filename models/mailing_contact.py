@@ -18,6 +18,7 @@ class IsMailingListAssistant(models.Model):
         for obj in self:
             mails = obj.mails.split("\n")
             for mail in mails:
+                mail = mail.strip()
                 contacts = self.env['mailing.contact'].search([('email','=',mail)])
                 for contact in contacts:
                     contact.active=False
